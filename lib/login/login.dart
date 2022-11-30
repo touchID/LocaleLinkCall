@@ -62,15 +62,7 @@ class _FormLoginState extends State<FormLogin> {
     }
   }
 
-  /// 播放
-  play() async {
-    AudioPlayer audioPlayer = AudioPlayer();
-    await audioPlayer.setSourceUrl("http://itoto.imblog.in/01.mp3");
-    await audioPlayer.resume();
-      print('play resume');
-  }
   void driverRegistration() async {
-    // play();
     try {
       PubMoudle().httpRequest('json','post', 'http://192.168.12.139:1337/api/pads' , { 'data':{'uuid': Utils.ANDROID_UUID} }).then((value){
         print(value);

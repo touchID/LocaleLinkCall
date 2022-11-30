@@ -1,7 +1,13 @@
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:mqtt_client/mqtt_client.dart';
+// import 'package:url_launcher/url_launcher.dart';
 // import 'package:xftts_fluttify/xftts_fluttify.dart';
+import '../CallHistory/call_sink.dart';
+import '../CallHistory/join_channel_audio.dart';
+import '../CallHistory/log_sink.dart';
+import '../main.dart';
 import '/V/showDefineAlertWidget.dart';
 import '/common/nsLog.dart';
 import 'ke_xu_item.dart';
@@ -11,6 +17,15 @@ import 'package:timeago/timeago.dart' as timeago;
 import '/M/mqttMsgModel.dart';
 import '/mqtt/msg.dart';
 import '/http/base_response.dart';
+import '/CallHistory/string_uid.dart';
+
+final eventBus = EventBus();
+// event 监听
+class EventFn{
+  // 想要接收的数据时什么类型的，就定义相同类型的变量
+  MqttMsgModel mqttMsgModel;
+  EventFn(this.mqttMsgModel);
+}
 
 class TabBarContent extends StatefulWidget {
   final String myTitle;
@@ -132,9 +147,63 @@ class _TabBarContentState extends State<TabBarContent> {
             // Notification(idStr).dispatch(context);
           }
         }
-      });
+        //if (mqttMsgModel.type!.contains("tel"))
+        {
+          showPhoneDialog(mqttMsgModel);
+        }
+        });
     }
+    //延时1500毫秒执行
+    Future.delayed(const Duration(milliseconds: 5500), () {
+      MqttMsgModel mqttMsgModel = MqttMsgModel();
+      mqttMsgModel.type = "tel";
+      // this.showPhoneDialog(mqttMsgModel);
+    });
   }
+
+  pushPhone(){
+    // BuildContext? context = navigatorKey.currentState?.overlay?.context;
+    // final Uri toLaunch =
+    // Uri(scheme: 'tvtelapp', host: 'forward', path: 'url');
+    // // Uri(scheme: 'mqqapi', host: 'forward', path: 'url');
+    // canLaunchUrl(toLaunch).then((bool result) {
+    //   print(result);
+    //   if (result) {
+    //     launchUrl(toLaunch);
+    //   }
+    //   setState(() {
+    //     // _hasCallSupport = result;
+    //   });
+    // });
+  }
+  void _pushCallVC() {
+    String channelId = '10000';
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Scaffold(
+              appBar: AppBar(
+                title: Text(
+                    '房间:${channelId}' as String),
+                // ignore: prefer_const_literals_to_create_immutables
+                actions: [const LogActionWidget()],
+              ),
+              body: JoinChannelAudio (channelId: channelId,) as Widget?,
+            )));
+  }
+  showPhoneDialog(MqttMsgModel mqttMsgModel) {
+    eventBus.fire(EventFn(mqttMsgModel));
+    //_pushCallVC();
+
+    // BuildContext? context = navigatorKey.currentState?.overlay?.context;
+    // showDialog(
+    //     context: context!,
+    //     builder: (BuildContext context) {
+    //       return ShowDefineAlertWidget( pushPhone , '提示', '有客服电话是否要接听');
+    //     }
+    // );
+  }
+
   Future speak(String text) async {
     FlutterTts flutterTts = FlutterTts();
     /// 设置语言

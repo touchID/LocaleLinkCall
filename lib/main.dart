@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:untitled14/CallHistory/call_history_item.dart';
 import 'CallHistory/call_history.dart';
+import 'CallHistory/call_sink.dart';
+import 'CallHistory/join_channel_audio.dart';
+import 'CallHistory/log_sink.dart';
 import 'daiban/search/search_page.dart';
+import 'daiban/tabBarContent.dart';
 import '我的/system_settings/sysset.dart';
 import '我的/user.dart';
 import '门/room_list_page.dart';
@@ -67,6 +71,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _index = 0;
+  var eventBusFn;
+  int daibanNum = 0;
 
   List _bodys = [
     Daiban(title: '华视美达'),
@@ -82,9 +88,41 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    // 注册监听器，订阅 eventbus
+    eventBusFn = eventBus.on<EventFn>().listen((event){
+      // print(event.mqttMsgModel);
+      _pushCallVC();
+      setState(() {
+        daibanNum++;
+      });
+    });
+    // eventBusFn = eventBus.on().listen((data) {
+    //   print(data.obj);
+    //   _pushCallVC();
+    // });
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    //取消订阅
+    eventBusFn.cancel();
   }
 
+  void _pushCallVC() {
+    String channelId = '10000';
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Scaffold(
+              appBar: AppBar(
+                title: Text(
+                    '房间:${channelId}' as String),
+                // ignore: prefer_const_literals_to_create_immutables
+                actions: [const LogActionWidget()],
+              ),
+              body: JoinChannelAudio (channelId: channelId,) as Widget?,
+            )));
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -97,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
         items: [
           BottomNavigationBarItem(
             icon:Badge(
-              badgeContent: Text('0'
+              badgeContent: Text('${daibanNum}'
                 ,style: TextStyle(color: Colors.white),),
               badgeColor: Colors.blue,
               position: BadgePosition.topEnd(),
@@ -115,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.phone_callback_sharp),
-            label: '客房来电记录',
+            label: '客房来电',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
@@ -131,6 +169,25 @@ class _MyHomePageState extends State<MyHomePage> {
           });
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _pushCallVC,
+        tooltip: '接听',
+        child:
+    // Row(
+    // mainAxisSize: MainAxisSize.min,
+    // children: [
+    //   CallActionWidget(),
+    //   ]),
+        const Icon(Icons.phone),
+        // shape: RoundedRectangleBorder(
+        // borderRadius: BorderRadius.circular(15),
+        // side: BorderSide(
+        //   width: 2,
+        //   color: Colors.red,
+        // ),
+        // ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

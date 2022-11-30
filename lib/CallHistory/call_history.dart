@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:untitled14/CallHistory/CallLogModel.dart';
 import '../M/city_model.dart';
 import '../common/nsLog.dart';
 import '../http/base_response.dart';
@@ -38,7 +39,7 @@ class _CallHistoryState extends State<CallHistory> {
     String hotelId = await PubMoudle.getHotelId();
     var parameter = {
       'page': '0',
-      'pageSize': '1',
+      'pageSize': '9999',
       'searchValue': '$searchStr'
     };
     // print(parameter);
@@ -49,13 +50,26 @@ class _CallHistoryState extends State<CallHistory> {
     }
     BaseResponse baseModel = BaseResponse.fromJson(data.data);
     if (baseModel.code != 200) {
-      NSLog(baseModel.data, StackTrace.current);
+      // NSLog(baseModel.data, StackTrace.current);
       return;
     }
     print(json.encode(baseModel.data));
     // List jsonList = baseModel.data ?? [];
-    // List<RoomModel> listData =
-    //     jsonList.map((e) => RoomModel.fromJson(e)).toList();
+    CallLogModel callLogModel = CallLogModel.fromJson(baseModel.data);
+    // print(json.encode(callLogModel.records!));
+    if (!mounted) {return;}
+    if (callLogModel.records!.length == 0) {
+      list = [];
+      list.clear();
+      setState(() {});
+      return;
+    }else{
+      list = callLogModel.records!;
+      setState(() {});
+    }
+
+    // List<Records> listData =
+    // callLogModel.map((e) => RoomModel.fromJson(e)).toList();
     // List<CityModel> roomList = [];
     // for (int i = 0, length = listData.length; i < length; i++) {
     //   RoomModel roomModel = listData[i];
