@@ -1,4 +1,4 @@
-name: untitled14
+name: locale_link_call
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -19,7 +19,11 @@ version: 1.0.0+1
 
 environment:
   sdk: ">=2.17.5 <3.0.0"
+# 这表明项目创建时使用的 Dart SDK 版本范围是 >=2.17.5 <3.0.0 。根据 Dart 和 Flutter 的版本对应关系：
 
+# - Flutter 3.0.0 发布于 2022 年 5 月，对应的 Dart 版本是 2.17.0
+# - Flutter 3.3.0 发布于 2022 年 8 月，对应的 Dart 版本是 2.18.0
+# 由于项目使用的是 Dart >=2.17.5 <3.0.0 ，可以推断项目很可能是在 Flutter 3.0.0 到 3.2.x 版本之间 创建的。
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
