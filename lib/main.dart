@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -134,17 +135,20 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
-            icon:
-                // Badge(
-                //   badgeContent: Text(
-                //     '${daibanNum}',
-                //     style: TextStyle(color: Colors.white),
-                //   ),
-                //   badgeColor: Colors.blue,
-                //   position: BadgePosition.topEnd(),
-                //   child:
-                Icon(Icons.home),
-            // ),
+            icon: badges.Badge(
+              // 显示数字
+              badgeContent: Text(
+                '$daibanNum',
+                style: TextStyle(color: Colors.white, fontSize: 10),
+              ),
+              // 角标颜色
+              badgeColor: Colors.blue,
+              // 位置：右上角
+              position: badges.BadgePosition.topEnd(top: -3, end: -3),
+              // 数量为0时不显示角标（最关键！）
+              showBadge: daibanNum > 0,
+              child: Icon(Icons.home),
+            ),
             label: '待办事项',
           ),
           BottomNavigationBarItem(
