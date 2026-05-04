@@ -8,6 +8,7 @@ import 'CallHistory/log_sink.dart';
 import 'daiban/daiban.dart';
 import 'daiban/search/search_page.dart';
 import 'daiban/tabBarContent.dart';
+import 'weather_web/weather_web_page.dart';
 import 'login/login.dart';
 import 'roomMessage/room_msg_list_page.dart';
 import 'utils.dart';
@@ -74,6 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int daibanNum = 0;
 
   List _bodys = [
+    WeatherWebPage(),
     Daiban(title: '华视美达'),
     RoomListPage(1),
     // // RoomListPage(2),
@@ -134,6 +136,10 @@ class _MyHomePageState extends State<MyHomePage> {
       body: _bodys[_index],
       bottomNavigationBar: BottomNavigationBar(
         items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.cloud),
+            label: '天气',
+          ),
           BottomNavigationBarItem(
             icon: badges.Badge(
               // 显示数字

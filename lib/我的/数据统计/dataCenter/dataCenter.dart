@@ -1,8 +1,7 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:locale_link_call/weather_web/base_web_view.dart';
 
 class DataCenter extends StatefulWidget {
   final String url;
@@ -30,17 +29,18 @@ class _DataCenterState extends State<DataCenter> {
         centerTitle: true,
       ),
       body: new Center(
-        child: WebView(
-          initialUrl: widget.url,
-          // initialUrl: "https://aisuda.bce.baidu.com/amis/examples/chart",
-          // initialUrl: "https://cloud.jimureport.com/bigscreen/#/view/1211961482594553857",
-          javascriptMode: JavascriptMode.unrestricted,
-          onPageStarted: (String url) {
-            print("onPageStarted $url");
-          },
-          onPageFinished: (String url) {
-            print("onPageFinished $url");
-          },
+        child: BaseWebView(
+          urlString: widget.url,
+          // initialUrl: widget.url,
+          // // initialUrl: "https://aisuda.bce.baidu.com/amis/examples/chart",
+          // // initialUrl: "https://cloud.jimureport.com/bigscreen/#/view/1211961482594553857",
+          // // javascriptMode: JavascriptMode.unrestricted,
+          // onPageStarted: (String url) {
+          //   print("onPageStarted $url");
+          // },
+          // onPageFinished: (String url) {
+          //   print("onPageFinished $url");
+          // },
           // onWebResourceError: (error) {
           //   print("${error.description}");
           // },
