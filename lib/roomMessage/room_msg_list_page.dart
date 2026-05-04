@@ -347,25 +347,30 @@ class _RoomMsgListPageState extends State<RoomMsgListPage> {
                                   child: SizedBox(
                                     width: 105,
                                     child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0)),
-                                          padding: const EdgeInsets.all(12.0),
-                                          //primary: Colors.blue,
-                                        ),
-                                        onPressed: () {
-                                          print('发送');
-                                          CityModel cityModel = CityModel();
-                                          List ids = [];
-                                          List names = [];
-                                          for (CityModel model in seletedArray) {
-                                            ids.add(model.id);
-                                            names.add(model.name);
-                                          }
-                                          cityModel.id = ids.join(','); //list转换成字符串
-                                          cityModel.name = names.join(','); //list转换成字符串
-                                          Utils.pushVC2(context, cityModel);
-                                        },
-                                        child: const Text('发送', style: TextStyle(color: Colors.white))),
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0)),
+                                        padding: const EdgeInsets.all(12.0),
+                                        backgroundColor: Colors.blue, // 背景色
+                                        foregroundColor: Colors.white, // 文字/图标颜色
+                                      ),
+                                      onPressed: () {
+                                        print('发送');
+                                        CityModel cityModel = CityModel();
+                                        List ids = [];
+                                        List names = [];
+                                        for (CityModel model in seletedArray) {
+                                          ids.add(model.id);
+                                          names.add(model.name);
+                                        }
+                                        cityModel.id = ids.join(','); //list转换成字符串
+                                        cityModel.name = names.join(','); //list转换成字符串
+                                        Utils.pushVC2(context, cityModel);
+                                      },
+                                      child: const Text(
+                                        '发送',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
                                   )
                                   //Text("发送",style: TextStyle(color: Color(0xFF999999)) /*Colors.blue*/,),
                                   ),
