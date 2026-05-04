@@ -1,19 +1,13 @@
-import 'dart:convert';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
-
-import '../common/nsLog.dart';
-import '../http/base_response.dart';
-import '/V/showDefineAlertWidget.dart';
-import '../门/M/roomModel.dart';
-import '/M/city_model.dart';
-import '../utils.dart';
-import '../消息/chatList.dart';
-import '/V/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:lpinyin/lpinyin.dart';
+
+import '/M/city_model.dart';
+import '/V/azlistview.dart';
+import '../common/nsLog.dart';
+import '../http/base_response.dart';
 import '../http/pub.dart';
-import 'dart:io';
+import '../utils.dart';
+import '../门/M/roomModel.dart';
 
 class RoomMsgListPage extends StatefulWidget {
   // final String city;
@@ -48,7 +42,7 @@ class _RoomMsgListPageState extends State<RoomMsgListPage> {
     print("seletedArray.count = ${seletedArray.length}");
     if (seletedArray.length == cityList.length) {
       allSelected = true;
-    }else {
+    } else {
       allSelected = false;
     }
   }
@@ -60,18 +54,14 @@ class _RoomMsgListPageState extends State<RoomMsgListPage> {
         seletedArray.add(cityModel);
       }
     }
-    setState(() {
-    });
+    setState(() {});
   }
-    void loadData() async {
+
+  void loadData() async {
     String hotelId = await PubMoudle.getHotelId();
     var parameter = {'page': '0', 'pageSize': '9999', 'searchValue': '$searchStr'};
     // print(parameter);
-    var data = await PubMoudle().httpRequest(
-        '',
-        'get',
-        '/api/hotel/$hotelId/room/list',
-        parameter);
+    var data = await PubMoudle().httpRequest('', 'get', '/api/hotel/$hotelId/room/list', parameter);
     if (data == null) {
       return;
     }
@@ -98,9 +88,12 @@ class _RoomMsgListPageState extends State<RoomMsgListPage> {
     }
     cityList.clear();
     cityList.addAll(roomList);
-    if (!mounted) { return; }
+    if (!mounted) {
+      return;
+    }
     _handleList(cityList);
   }
+
   void _handleList(List<CityModel> list) {
     if (list.isEmpty) return;
     for (int i = 0, length = list.length; i < length; i++) {
@@ -145,8 +138,8 @@ class _RoomMsgListPageState extends State<RoomMsgListPage> {
                   color: Color(0xFFCCCCCC),
                 ),
               ),
-              onChanged: (value){
-                setState((){
+              onChanged: (value) {
+                setState(() {
                   searchStr = value;
                 });
                 loadData();
@@ -179,7 +172,7 @@ class _RoomMsgListPageState extends State<RoomMsgListPage> {
           InkWell(
             onTap: () {
               _searchController.text = '';
-              setState((){
+              setState(() {
                 searchStr = '';
               });
               loadData();
@@ -187,12 +180,8 @@ class _RoomMsgListPageState extends State<RoomMsgListPage> {
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Text(
-                searchStr.length > 0 ?
-                "取消"
-                    :
-                "取消"
-                ,
-                style: TextStyle(color: searchStr.length > 0 ? Colors.blue:Color(0xFF999999), fontSize: 14),
+                searchStr.length > 0 ? "取消" : "取消",
+                style: TextStyle(color: searchStr.length > 0 ? Colors.blue : Color(0xFF999999), fontSize: 14),
               ),
             ),
           ),
@@ -203,43 +192,42 @@ class _RoomMsgListPageState extends State<RoomMsgListPage> {
 
   Widget getListItem(BuildContext context, CityModel model) {
     return Container(
-        child: Column(
-            children: [
-              ListTile(
-                leading: Container(
-                  padding: EdgeInsets.fromLTRB(0, 11, 0, 9),
-                  // width: 25,
-                  // height: 25,
-                  child:
-                  Icon(
-                    Utils.checkSeleted(seletedArray,model) ? Icons.check_circle : Icons.check_circle_outline,
-                    color: Colors.blue,
-                    // Image.asset( 'images/check-circle-filled.png',
-                  ),
-                ),
-                title: Text('房间${model.name!}',style: TextStyle(fontSize: 16.0, color: Colors.black)),
-                onTap: () {
-                  if( Utils.checkSeleted(seletedArray,model) ){
-                    seletedArray.remove(model);
-                  }else{
-                    seletedArray.add(model);
-                  }
-                  setupAllButtonSelected();
-                  setState(() {
-
-                  });
-                  // Navigator.pop(context, model.name);
-                },
-                trailing: GestureDetector(
-                  onTap: (){
-                    Utils.pushVC2(context, model);
-                  },
-                  child: Container(
-                    child: Text('发送     ', style: TextStyle(color: Colors.blue)),
-                  ),
-                ),
-              ),Divider(height: 0,)])
-    );
+        child: Column(children: [
+      ListTile(
+        leading: Container(
+          padding: EdgeInsets.fromLTRB(0, 11, 0, 9),
+          // width: 25,
+          // height: 25,
+          child: Icon(
+            Utils.checkSeleted(seletedArray, model) ? Icons.check_circle : Icons.check_circle_outline,
+            color: Colors.blue,
+            // Image.asset( 'images/check-circle-filled.png',
+          ),
+        ),
+        title: Text('房间${model.name!}', style: TextStyle(fontSize: 16.0, color: Colors.black)),
+        onTap: () {
+          if (Utils.checkSeleted(seletedArray, model)) {
+            seletedArray.remove(model);
+          } else {
+            seletedArray.add(model);
+          }
+          setupAllButtonSelected();
+          setState(() {});
+          // Navigator.pop(context, model.name);
+        },
+        trailing: GestureDetector(
+          onTap: () {
+            Utils.pushVC2(context, model);
+          },
+          child: Container(
+            child: Text('发送     ', style: TextStyle(color: Colors.blue)),
+          ),
+        ),
+      ),
+      Divider(
+        height: 0,
+      )
+    ]));
   }
 
   @override
@@ -252,13 +240,13 @@ class _RoomMsgListPageState extends State<RoomMsgListPage> {
           // width: 60.0,
           // height: 60.0,
           // child: CircleAvatar(
-            child: Icon(Icons.access_alarm),
+          child: Icon(Icons.access_alarm),
           // ),
         ),
         actions: [
           // Platform.isAndroid ? SizedBox() :
           GestureDetector(
-            onTap: (){
+            onTap: () {
               print('刷新');
               loadData();
             },
@@ -277,7 +265,7 @@ class _RoomMsgListPageState extends State<RoomMsgListPage> {
             header(),
             Expanded(
               child: Material(
-                color: Colors.white,//Color(0x80000000),
+                color: Colors.white, //Color(0x80000000),
                 child: Card(
                   clipBehavior: Clip.hardEdge,
                   margin: const EdgeInsets.only(left: 0, top: 0, right: 0),
@@ -295,7 +283,6 @@ class _RoomMsgListPageState extends State<RoomMsgListPage> {
                         height: 50.0,
                         child: Text("当前房间数量: ${cityList.length}"),
                       ),
-
                       Expanded(
                         child: AzListView(
                           data: cityList,
@@ -310,20 +297,20 @@ class _RoomMsgListPageState extends State<RoomMsgListPage> {
                             String tag = model.getSuspensionTag();
                             return Utils.getSusItem(context, tag);
                           },
-                          indexBarData: ['★', '0','1','2','3','4','5','6','7','8','9','#'],//...kIndexBarData],
+                          indexBarData: ['★', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '#'], //...kIndexBarData],
                           // indexBarWidth: 35.0,
                           // indexBarHeight: 11,
                           // indexBarItemHeight:22,
                         ),
                       ),
-                    Container(
-                      // height: 60,
-                      color: Colors.grey[200],
-                      child: Row(
-                        children: [
-                          // SizedBox(width: 0,),
+                      Container(
+                        // height: 60,
+                        color: Colors.grey[200],
+                        child: Row(
+                          children: [
+                            // SizedBox(width: 0,),
                             GestureDetector(
-                              onTap: (){
+                              onTap: () {
                                 print('全选');
                                 allSelected = !allSelected;
                                 seletedAllClick();
@@ -335,54 +322,59 @@ class _RoomMsgListPageState extends State<RoomMsgListPage> {
                                 child: Icon(
                                   allSelected ? Icons.check_circle : Icons.check_circle_outline,
                                   color: Colors.blue,
-                                ),//Text("全选",style: TextStyle(color: Colors.blue)),
+                                ), //Text("全选",style: TextStyle(color: Colors.blue)),
                               ),
                             ),
-                          SizedBox(width: 10,),
-                          GestureDetector(
-                              onTap:(){
-                                print('全选');
-                                allSelected = !allSelected;
-                                seletedAllClick();
-                              },
-                              child: Text("全选",style: TextStyle(color: Colors.blue))),
-                          SizedBox(width: 20,),
-                          Text("已选${seletedArray.length}间",style: TextStyle(color: Colors.grey)),
-              Expanded(
-                child:Container(
-                            alignment: Alignment.centerRight,
-                            padding: const EdgeInsets.only(left: 15.0),
-                            // height: 50.0,
-                            child:
-                                SizedBox(
-                                  width: 105,
-                                  child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0)),
-                                        padding: const EdgeInsets.all(12.0),
-                                        primary: Colors.blue,
-                                      ),
-                                      onPressed: (){
-                                        print('发送');
-                                        CityModel cityModel = CityModel();
-                                        List ids = [];
-                                        List names = [];
-                                        for (CityModel model in seletedArray) {
-                                          ids.add(model.id);
-                                          names.add(model.name);
-                                        }
-                                        cityModel.id = ids.join(',');   //list转换成字符串
-                                        cityModel.name = names.join(',');   //list转换成字符串
-                                        Utils.pushVC2(context, cityModel);
-                                      },
-                                      child: const Text('发送', style: TextStyle(color: Colors.white))),
-                                )
-                            //Text("发送",style: TextStyle(color: Color(0xFF999999)) /*Colors.blue*/,),
-                          ),
-              ),
-                          SizedBox(width: 35,),
-                        ],
-                      ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            GestureDetector(
+                                onTap: () {
+                                  print('全选');
+                                  allSelected = !allSelected;
+                                  seletedAllClick();
+                                },
+                                child: Text("全选", style: TextStyle(color: Colors.blue))),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text("已选${seletedArray.length}间", style: TextStyle(color: Colors.grey)),
+                            Expanded(
+                              child: Container(
+                                  alignment: Alignment.centerRight,
+                                  padding: const EdgeInsets.only(left: 15.0),
+                                  // height: 50.0,
+                                  child: SizedBox(
+                                    width: 105,
+                                    child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0)),
+                                          padding: const EdgeInsets.all(12.0),
+                                          //primary: Colors.blue,
+                                        ),
+                                        onPressed: () {
+                                          print('发送');
+                                          CityModel cityModel = CityModel();
+                                          List ids = [];
+                                          List names = [];
+                                          for (CityModel model in seletedArray) {
+                                            ids.add(model.id);
+                                            names.add(model.name);
+                                          }
+                                          cityModel.id = ids.join(','); //list转换成字符串
+                                          cityModel.name = names.join(','); //list转换成字符串
+                                          Utils.pushVC2(context, cityModel);
+                                        },
+                                        child: const Text('发送', style: TextStyle(color: Colors.white))),
+                                  )
+                                  //Text("发送",style: TextStyle(color: Color(0xFF999999)) /*Colors.blue*/,),
+                                  ),
+                            ),
+                            SizedBox(
+                              width: 35,
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -395,4 +387,3 @@ class _RoomMsgListPageState extends State<RoomMsgListPage> {
     );
   }
 }
-

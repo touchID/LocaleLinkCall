@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import '../../V/showDefineAlertWidget.dart';
 
 import '/http/base_response.dart';
-import '/utils.dart';
-
 import '/http/pub.dart';
+import '/utils.dart';
+import '../../V/showDefineAlertWidget.dart';
 
 class QrCodePage extends StatefulWidget {
   final String? id;
   final String? roomNumber;
-  QrCodePage(this.id , this.roomNumber);
+  QrCodePage(this.id, this.roomNumber);
 
   @override
   State<QrCodePage> createState() => _QrCodePageState();
@@ -21,18 +20,14 @@ class _QrCodePageState extends State<QrCodePage> {
 
   void _getData([id]) async {
     String hotelId = await PubMoudle.getHotelId();
-    var data = await PubMoudle().httpRequest(
-        '',
-        'get',
-        '/api/hotel/$hotelId/room/$id/qrcode',
-        {"deviceIdent":Utils.ANDROID_UUID});
+    var data =
+        await PubMoudle().httpRequest('', 'get', '/api/hotel/$hotelId/room/$id/qrcode', {"deviceIdent": Utils.ANDROID_UUID});
     if (data == null) {
       showDialog(
           context: context,
           builder: (BuildContext context) {
-            return ShowDefineAlertWidget( pushLoginVC , '温馨提示', '登陆已过期，请重新登陆');
-          }
-      );
+            return ShowDefineAlertWidget(pushLoginVC, '温馨提示', '登陆已过期，请重新登陆');
+          });
       return;
     }
     // print(data.data);
@@ -68,18 +63,39 @@ class _QrCodePageState extends State<QrCodePage> {
       ),
       body: new Center(
         child:
-        // Column(
-        //   crossAxisAlignment: CrossAxisAlignment.center,  //居中
-        //   children: [
-        //     SizedBox(height: 120,),
-        //     Text("授权二维码"),
-        //     SizedBox(height: 20,),
+            // Column(
+            //   crossAxisAlignment: CrossAxisAlignment.center,  //居中
+            //   children: [
+            //     SizedBox(height: 120,),
+            //     Text("授权二维码"),
+            //     SizedBox(height: 20,),
 
-            jsonStr.length > 0 ? QrImage(
-            data: jsonStr,
-            size: 300.0,
-                embeddedImage: NetworkImage("https://zhengxin-pub.cdn.bcebos.com/logopic/6e832d952ad4d130b5381eacf49f49d3_fullsize.jpg?x-bce-process=image/resize,m_lfit,w_200"),
-          ) : SizedBox(),
+            jsonStr.isNotEmpty
+                ? SizedBox(
+                    width: 300,
+                    height: 300,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        // 二维码
+                        QrImageView(
+                          data: jsonStr,
+                          size: 300.0,
+                        ),
+                        // 中间的网络图片 Logo
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: Image.network(
+                            "https://zhengxin-pub.cdn.bcebos.com/logopic/6e832d952ad4d130b5381eacf49f49d3_fullsize.jpg?x-bce-process=image/resize,m_lfit,w_200",
+                            width: 60, // logo 大小
+                            height: 60,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : const SizedBox(),
 
         //   ],
         // ),

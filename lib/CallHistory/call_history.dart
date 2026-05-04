@@ -1,17 +1,13 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:untitled14/CallHistory/CallLogModel.dart';
-import '../M/city_model.dart';
-import '../common/nsLog.dart';
+
+import 'package:flutter/material.dart';
+
 import '../http/base_response.dart';
-import '/门/M/roomModel.dart';
+import '../http/pub.dart';
 // import '../model/city_model.dart';
+import 'CallLogModel.dart';
 import 'Records.dart';
 import 'call_history_item.dart';
-import '/V/showDefineAlertWidget.dart';
-import 'package:flutter/material.dart';
-import '../http/pub.dart';
 
 class CallHistory extends StatefulWidget {
   const CallHistory({Key? key}) : super(key: key);
@@ -21,7 +17,6 @@ class CallHistory extends StatefulWidget {
 }
 
 class _CallHistoryState extends State<CallHistory> {
-
   List<Records> list = [];
   TextEditingController _searchController = TextEditingController();
   String searchStr = '';
@@ -37,14 +32,9 @@ class _CallHistoryState extends State<CallHistory> {
 
   void loadData() async {
     String hotelId = await PubMoudle.getHotelId();
-    var parameter = {
-      'page': '0',
-      'pageSize': '9999',
-      'searchValue': '$searchStr'
-    };
+    var parameter = {'page': '0', 'pageSize': '9999', 'searchValue': '$searchStr'};
     // print(parameter);
-    var data = await PubMoudle().httpRequest(
-        '', 'get', '/api/hotel/$hotelId/yunxin/list', parameter);
+    var data = await PubMoudle().httpRequest('', 'get', '/api/hotel/$hotelId/yunxin/list', parameter);
     if (data == null) {
       return;
     }
@@ -57,13 +47,15 @@ class _CallHistoryState extends State<CallHistory> {
     // List jsonList = baseModel.data ?? [];
     CallLogModel callLogModel = CallLogModel.fromJson(baseModel.data);
     // print(json.encode(callLogModel.records!));
-    if (!mounted) {return;}
+    if (!mounted) {
+      return;
+    }
     if (callLogModel.records!.length == 0) {
       list = [];
       list.clear();
       setState(() {});
       return;
-    }else{
+    } else {
       list = callLogModel.records!;
       setState(() {});
     }
@@ -142,10 +134,7 @@ class _CallHistoryState extends State<CallHistory> {
               padding: const EdgeInsets.all(10.0),
               child: Text(
                 searchStr.length > 0 ? "取消" : "取消",
-                style: TextStyle(
-                    color:
-                        searchStr.length > 0 ? Colors.blue : Color(0xFF999999),
-                    fontSize: 14),
+                style: TextStyle(color: searchStr.length > 0 ? Colors.blue : Color(0xFF999999), fontSize: 14),
               ),
             ),
           ),
@@ -158,12 +147,12 @@ class _CallHistoryState extends State<CallHistory> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('客房来电记录' ),
+        title: Text('客房来电记录'),
         centerTitle: true,
         actions: [
           // Platform.isAndroid ? SizedBox() :
           GestureDetector(
-            onTap: (){
+            onTap: () {
               print('刷新');
               loadData();
             },
@@ -189,8 +178,7 @@ class _CallHistoryState extends State<CallHistory> {
                     return CallHistoryItem(list[index]);
                   },
                   // controller: _controller,
-                )
-                ,
+                ),
               ),
             ),
             // Expanded(child: CallHistoryItem(cityList)),

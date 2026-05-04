@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:untitled14/CallHistory/call_history_item.dart';
+
 import 'CallHistory/call_history.dart';
-import 'CallHistory/call_sink.dart';
 import 'CallHistory/join_channel_audio.dart';
 import 'CallHistory/log_sink.dart';
+import 'daiban/daiban.dart';
 import 'daiban/search/search_page.dart';
 import 'daiban/tabBarContent.dart';
+import 'login/login.dart';
+import 'roomMessage/room_msg_list_page.dart';
+import 'utils.dart';
 import '我的/system_settings/sysset.dart';
 import '我的/user.dart';
 import '门/room_list_page.dart';
-import 'daiban/daiban.dart';
-import 'roomMessage/room_msg_list_page.dart';
-import 'utils.dart';
-import 'login/login.dart';
-import 'package:badges/badges.dart';
 
 void main() {
   // if (Platform.isAndroid) {
@@ -27,18 +25,18 @@ void main() {
   //   ]);
   // }
   timeago.setLocaleMessages('cn', timeago.ZhCnMessages());
-  runApp(MyApp());//const
+  runApp(MyApp()); //const
   // XfTTS.instance.init('5e82d068');
   // initPlatformState();
   Utils.init();
   // runApp(const MyApp());
 }
+
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {
   // final botToastBuilder = BotToastInit();
   MyApp({Key? key}) : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +50,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         '/home': (context) => MyHomePage(title: '华视酒店管理'),
-        '/login': (context) => Login(),//LoginPage(),
+        '/login': (context) => Login(), //LoginPage(),
         '/search': (context) => SearchPage(),
         '/sysset': (context) => SysSet(),
       },
@@ -89,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement initState
     super.initState();
     // 注册监听器，订阅 eventbus
-    eventBusFn = eventBus.on<EventFn>().listen((event){
+    eventBusFn = eventBus.on<EventFn>().listen((event) {
       // print(event.mqttMsgModel);
       _pushCallVC();
       setState(() {
@@ -101,6 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //   _pushCallVC();
     // });
   }
+
   @override
   void dispose() {
     super.dispose();
@@ -114,18 +113,19 @@ class _MyHomePageState extends State<MyHomePage> {
         context,
         MaterialPageRoute(
             builder: (context) => Scaffold(
-              appBar: AppBar(
-                title: Text(
-                    '房间:${channelId}' as String),
-                // ignore: prefer_const_literals_to_create_immutables
-                actions: [const LogActionWidget()],
-              ),
-              body: JoinChannelAudio (channelId: channelId,) as Widget?,
-            )));
+                  appBar: AppBar(
+                    title: Text('房间:${channelId}' as String),
+                    // ignore: prefer_const_literals_to_create_immutables
+                    actions: [const LogActionWidget()],
+                  ),
+                  body: JoinChannelAudio(
+                    channelId: channelId,
+                  ) as Widget?,
+                )));
   }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       // appBar: AppBar(
       //   title: Text(widget.title),
@@ -134,13 +134,17 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
-            icon:Badge(
-              badgeContent: Text('${daibanNum}'
-                ,style: TextStyle(color: Colors.white),),
-              badgeColor: Colors.blue,
-              position: BadgePosition.topEnd(),
-              child: Icon(Icons.home),
-            ),
+            icon:
+                // Badge(
+                //   badgeContent: Text(
+                //     '${daibanNum}',
+                //     style: TextStyle(color: Colors.white),
+                //   ),
+                //   badgeColor: Colors.blue,
+                //   position: BadgePosition.topEnd(),
+                //   child:
+                Icon(Icons.home),
+            // ),
             label: '待办事项',
           ),
           BottomNavigationBarItem(
@@ -164,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
         currentIndex: _index,
         onTap: (index) {
           print(index);
-          setState((){
+          setState(() {
             _index = index;
           });
         },
@@ -173,12 +177,12 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _pushCallVC,
         tooltip: '接听',
         child:
-    // Row(
-    // mainAxisSize: MainAxisSize.min,
-    // children: [
-    //   CallActionWidget(),
-    //   ]),
-        const Icon(Icons.phone),
+            // Row(
+            // mainAxisSize: MainAxisSize.min,
+            // children: [
+            //   CallActionWidget(),
+            //   ]),
+            const Icon(Icons.phone),
         // shape: RoundedRectangleBorder(
         // borderRadius: BorderRadius.circular(15),
         // side: BorderSide(
