@@ -1,3 +1,4 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
 class WeatherWebViewModel extends GetxController {
@@ -5,6 +6,21 @@ class WeatherWebViewModel extends GetxController {
   static const String title = "天气";
   static const bool isNeedHeartbeat = true;
   static const bool showLoading = true;
+
+  static Position? _currentPosition;
+
+  static Future<void> getCurrentLocationUrl() async {
+    try {
+      _currentPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+        timeLimit: const Duration(seconds: 10),
+      );
+
+      // url = "http://www.caiyunapp.com/h5/#${_currentPosition!.longitude},${_currentPosition!.latitude}";
+    } catch (e) {
+      return;
+    }
+  }
 
   List<String> webViewAllowList = [];
 

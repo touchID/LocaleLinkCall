@@ -68,6 +68,7 @@ dependencies:
   flutter_tts: ^3.5.3
   flutter_update_dialog: ^2.0.0
   webview_flutter: ^4.8.0
+  geolocator: ^9.0.0
 
 #  bot_toast: ^4.0.3 不兼容网页
   toast: ^0.3.0

@@ -62,5 +62,9 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>需要获取您的位置来显示当地天气</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>需要获取您的位置来显示当地天气</string>
 </dict>
 </plist>
